@@ -346,42 +346,6 @@ npm run test:orders
 ```
 
 ---
-
-## 🎤 Viva & Technical Evaluation Q&A
-
-<details>
-<summary><strong>1. Why must the Razorpay Order be created on the backend?</strong></summary>
-Because creating a Razorpay order requires your secret key (`RAZORPAY_KEY_SECRET`). Exposing this secret in frontend client-side code would compromise the entire merchant account.
-</details>
-
-<details>
-<summary><strong>2. Why does Razorpay expect amounts in paise?</strong></summary>
-To avoid floating-point rounding errors in currency transactions. 1 INR is sent as 100 paise (`amount * 100`).
-</details>
-
-<details>
-<summary><strong>3. What are <code>razorpay_order_id</code>, <code>razorpay_payment_id</code>, and <code>razorpay_signature</code>?</strong></summary>
-- <code>razorpay_order_id</code>: Unique order reference created by your backend on Razorpay servers.<br/>
-- <code>razorpay_payment_id</code>: Individual transaction identifier generated upon user payment attempt.<br/>
-- <code>razorpay_signature</code>: HMAC-SHA256 hash created by Razorpay using your Key Secret as the private key and <code>order_id + '|' + payment_id</code> as the message payload.
-</details>
-
-<details>
-<summary><strong>4. Why must stock be re-checked during checkout?</strong></summary>
-A user may add an item to their cart and initiate checkout hours or days later. Other customers might have purchased the remaining stock in between. Revalidating stock at the moment of checkout prevents backorders and overselling.
-</details>
-
-<details>
-<summary><strong>5. How is user isolation enforced on the Order APIs?</strong></summary>
-All order retrieval endpoints check the authenticated user's ID extracted from the verified JWT payload:
-```javascript
-const order = await Order.findOne({ _id: req.params.id, customer: req.user._id });
-if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-```
-</details>
-
----
-
 <div align="center">
   <b>Developed for Engineering Lab 06 — ShopKart Sequence</b><br/>
   <i>All rights reserved &copy; 2026 ShopKart Team</i>
