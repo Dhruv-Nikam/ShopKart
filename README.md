@@ -217,16 +217,7 @@ npm run dev
 
 ## ⚙️ Environment Configuration
 
-### Backend: `backend/.env`
 
-```env
-PORT=5001
-MONGO_URI=mongodb+srv://dhruv25bcs10778_db_user:dhruv12345@cluster0.zk9m4da.mongodb.net/shopcart?appName=Cluster0
-JWT_SECRET=shopkart_jwt_secret_key_2026_super_secure_lab01
-NODE_ENV=development
-RAZORPAY_KEY_ID=rzp_test_Tl5wvRxn1BQ5A7
-RAZORPAY_KEY_SECRET=Dv2pXX3aQnPWYBzuPZB5n7GH
-```
 
 > ⚠️ **Note**: No spaces around `=` in `.env` files. `RAZORPAY_KEY_SECRET` is kept strictly on the backend and **never** exposed to the frontend bundle.
 
