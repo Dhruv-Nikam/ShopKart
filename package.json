@@ -1,0 +1,16 @@
+{
+  "name": "shopkart",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=shopkart-frontend",
+    "start": "npm start --workspace=shopkart-backend"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

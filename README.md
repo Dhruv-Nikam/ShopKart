@@ -218,7 +218,6 @@ npm run dev
 ## ⚙️ Environment Configuration
 
 
-
 > ⚠️ **Note**: No spaces around `=` in `.env` files. `RAZORPAY_KEY_SECRET` is kept strictly on the backend and **never** exposed to the frontend bundle.
 
 ---
@@ -350,3 +349,29 @@ npm run test:orders
   <b>Developed for Engineering Lab 06 — ShopKart Sequence</b><br/>
   <i>All rights reserved &copy; 2026 ShopKart Team</i>
 </div>
+
+---
+
+## Deploying Both Apps as One Railway Service
+
+The repository root is an npm workspace for both apps. Deploy the repository root as a single Railway service:
+
+1. Set the service Root Directory to `/` (the repository root).
+2. Use `npm run build` as the build command and `npm start` as the start command.
+3. Add the backend environment variables in Railway: `MONGO_URI`, `JWT_SECRET`, `RAZORPAY_KEY_ID`, and `RAZORPAY_KEY_SECRET`. Set `NODE_ENV` to `production`; Railway supplies `PORT`.
+4. Do not set `VITE_API_URL`: the frontend uses relative API paths, so it calls the backend on the same domain.
+
+The build produces `frontend/dist`, and the Express backend serves those files alongside the API. The `/health` endpoint is available for health checks. Keep real credentials only in Railway Variables and rotate credentials that have been shared publicly.
+
+---
+
+## Deploying Both Apps as One Railway Service
+
+The repository root is an npm workspace for both apps. Deploy the repository root as a single Railway service:
+
+1. Set the service Root Directory to `/` (the repository root).
+2. Use `npm run build` as the build command and `npm start` as the start command.
+3. Add the backend environment variables in Railway: `MONGO_URI`, `JWT_SECRET`, `RAZORPAY_KEY_ID`, and `RAZORPAY_KEY_SECRET`. Set `NODE_ENV` to `production`; Railway supplies `PORT`.
+4. Do not set `VITE_API_URL`: the frontend uses relative API paths, so it calls the backend on the same domain.
+
+The build produces `frontend/dist`, and the Express backend serves those files alongside the API. The `/health` endpoint is available for health checks. Keep real credentials only in Railway Variables and rotate credentials that have been shared publicly.

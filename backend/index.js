@@ -3,6 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 const customerRoutes = require('./routes/customer.routes');
 const productRoutes = require('./routes/product.routes');
@@ -12,6 +14,9 @@ const orderRoutes = require('./routes/order.routes');
 const { seedProducts } = require('./scripts/seedProducts');
 
 const app = express();
+const frontendDist = path.resolve(__dirname, '../frontend/dist');
+const frontendIndex = path.join(frontendDist, 'index.html');
+const hasFrontendBuild = fs.existsSync(frontendIndex);
 
 // Middlewares
 app.use(
@@ -23,12 +28,25 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 
-// Base Route / Health Check
-app.get('/', (req, res) => {
+app.get('/health', (req, res) => {
   res.status(200).json({
     success: true,
-    message: 'ShopKart Customer Authentication Service API is running',
+    message: 'ShopKart API is running',
   });
+});
+
+if (hasFrontendBuild) {
+  app.use(express.static(frontendDist));
+}
+
+app.get('*', (req, res, next) => {
+  const acceptsHtml = req.get('accept')?.includes('text/html');
+
+  if (!hasFrontendBuild || req.path === '/health' || !acceptsHtml) {
+    return next();
+  }
+
+  return res.sendFile(frontendIndex);
 });
 
 // API Routes
@@ -37,6 +55,17 @@ app.use('/products', productRoutes);
 app.use('/wishlist', wishlistRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
+
+app.get('/', (req, res) => {
+  if (hasFrontendBuild) {
+    return res.sendFile(frontendIndex);
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: 'ShopKart Customer Authentication Service API is running',
+  });
+});
 
 // 404 Handler
 app.use((req, res) => {
