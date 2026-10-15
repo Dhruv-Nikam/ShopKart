@@ -86,16 +86,35 @@ app.use((err, req, res, next) => {
 
 // Database Connection & Server Startup
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/shopkart';
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+const MONGO_URI =
+  process.env.MONGO_URI ||
+  (IS_PRODUCTION ? null : 'mongodb://127.0.0.1:27017/shopkart');
 
 const startServer = async () => {
+  if (!MONGO_URI) {
+    console.error('[MongoDB] MONGO_URI must be configured in production.');
+    process.exit(1);
+    return;
+  }
+
   let connectionUri = MONGO_URI;
 
   try {
-    // Attempt connecting to the configured MONGO_URI with a 2-second timeout
-    await mongoose.connect(connectionUri, { serverSelectionTimeoutMS: 2000 });
+    await mongoose.connect(connectionUri, {
+      serverSelectionTimeoutMS: IS_PRODUCTION ? 15000 : 2000,
+    });
     console.log('[MongoDB] Connected successfully.');
   } catch (error) {
+    if (process.env.NODE_ENV !== 'development') {
+      console.error(
+        `[MongoDB] Production database connection failed (${error.name}). ` +
+          'Check MONGO_URI, MongoDB Atlas network access, and database credentials.'
+      );
+      process.exit(1);
+      return;
+    }
+
     console.warn('[MongoDB] Configured database connection failed; using development fallback.');
     console.log('[MongoDB] Starting built-in in-memory MongoDB server for development...');
 

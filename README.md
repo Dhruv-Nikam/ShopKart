@@ -361,7 +361,7 @@ The repository root is an npm workspace for both apps. Deploy the repository roo
 3. Add the backend environment variables in Railway: `MONGO_URI`, `JWT_SECRET`, `RAZORPAY_KEY_ID`, and `RAZORPAY_KEY_SECRET`. Set `NODE_ENV` to `production`; Railway supplies `PORT`.
 4. Do not set `VITE_API_URL`: the frontend uses relative API paths, so it calls the backend on the same domain.
 
-The build produces `frontend/dist`, and the Express backend serves those files alongside the API. The `/health` endpoint is available for health checks. Keep real credentials only in Railway Variables and rotate credentials that have been shared publicly.
+The build produces `frontend/dist`, and the Express backend serves those files alongside the API. The `/health` endpoint is available for health checks. Ensure MongoDB Atlas network access allows connections from the Railway service. Production requires a reachable MongoDB database; the in-memory database is only a local development fallback. Keep real credentials only in Railway Variables and rotate credentials that have been shared publicly.
 
 ---
 
